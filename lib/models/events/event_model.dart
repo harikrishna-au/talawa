@@ -38,8 +38,8 @@ class Event {
           ? null
           : User(
               id: (json['creator'] as Map<String, dynamic>)['id']?.toString(),
-              firstName:
-                  (json['creator'] as Map<String, dynamic>)['name']?.toString(),
+              firstName: (json['creator'] as Map<String, dynamic>)['firstName']?.toString(),
+              lastName: (json['creator'] as Map<String, dynamic>)['lastName']?.toString(),
             ),
       attachments: json['attachments'] as List<dynamic>?,
     );
