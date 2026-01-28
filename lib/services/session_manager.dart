@@ -156,7 +156,7 @@ class SessionManager {
   ///   None
   ///
   /// **returns**:
-  /// * `Future<void>`: completes when tokens are cleared.
+  ///   None
   Future<void> _clearTokens() async {
     try {
       // Clear the user's tokens
