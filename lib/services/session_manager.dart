@@ -11,7 +11,7 @@ class SessionManager {
 
   /// Flag to prevent concurrent token refresh attempts.
   bool _refreshInProgress = false;
-  
+
   /// Completer to handle multiple concurrent refresh requests.
   Completer<bool>? _refreshCompleter;
 
@@ -62,7 +62,7 @@ class SessionManager {
         }
       } catch (e) {
         developer.log('Token refresh attempt ${attempt + 1} failed: $e');
-        
+
         // Apply exponential backoff delay before next attempt
         if (attempt < 2) {
           await Future.delayed(Duration(milliseconds: 100 * (1 << attempt)));
@@ -73,7 +73,7 @@ class SessionManager {
         }
       }
     }
-    
+
     return false;
   }
 
@@ -162,7 +162,7 @@ class SessionManager {
       // Clear the user's tokens
       userConfig.currentUser.refreshToken = null;
       userConfig.currentUser.authToken = null;
-      
+
       developer.log('Tokens cleared due to unrecoverable refresh error');
     } catch (e) {
       developer.log('Error clearing tokens: $e');

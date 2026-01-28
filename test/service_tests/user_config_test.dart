@@ -362,7 +362,8 @@ void main() {
       final model = UserConfig();
       model.currentUser.id = 'fake_id';
 
-      userBox.put('user', User(id: 'fake', name: 'first', authToken: 'randomAuthToken'));
+      userBox.put('user',
+          User(id: 'fake', name: 'first', authToken: 'randomAuthToken'));
 
       final Map<String, dynamic> data = {
         "user": {

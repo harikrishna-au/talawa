@@ -49,24 +49,24 @@ void main() {
           .thenAnswer((_) async => true);
 
       final result = await sessionManager.refreshSession();
-      
+
       expect(result, true);
       verify(databaseFunctions.refreshAccessToken("refreshToken"));
     });
 
     test('Refresh Token Method - User not logged in', () async {
       userConfig.currentUser = User(id: 'null');
-      
+
       final result = await sessionManager.refreshSession();
-      
+
       expect(result, false);
     });
 
     test('Refresh Token Method - No refresh token', () async {
       userConfig.currentUser.refreshToken = null;
-      
+
       final result = await sessionManager.refreshSession();
-      
+
       expect(result, false);
     });
 
@@ -81,12 +81,13 @@ void main() {
         exceptionThrown = true;
         expect(e.toString(), contains('Network error'));
       }
-      
-      expect(exceptionThrown, isTrue, reason: 'Exception should have been thrown');
+
+      expect(exceptionThrown, isTrue,
+          reason: 'Exception should have been thrown');
 
       // Should attempt 3 times
       verify(databaseFunctions.refreshAccessToken("refreshToken")).called(3);
-      
+
       // Tokens should be cleared after all retries fail
       expect(userConfig.currentUser.refreshToken, isNull);
       expect(userConfig.currentUser.authToken, isNull);
@@ -107,17 +108,17 @@ void main() {
       ];
 
       final results = await Future.wait(futures);
-      
+
       // All should succeed
       expect(results, [true, true, true]);
-      
+
       // But the actual refresh should only be called once due to guarding
       verify(databaseFunctions.refreshAccessToken("refreshToken")).called(1);
     });
 
     test('Refresh Token Method - Exponential backoff timing', () async {
       final stopwatch = Stopwatch()..start();
-      
+
       when(databaseFunctions.refreshAccessToken("refreshToken"))
           .thenThrow(Exception('Network error'));
 
@@ -129,8 +130,9 @@ void main() {
       }
 
       stopwatch.stop();
-      
-      expect(exceptionCaught, isTrue, reason: 'Exception should have been caught');
+
+      expect(exceptionCaught, isTrue,
+          reason: 'Exception should have been caught');
       // Should have waited at least 100ms + 200ms = 300ms for backoff
       // (allowing some tolerance for test execution time)
       expect(stopwatch.elapsedMilliseconds, greaterThan(250));
@@ -143,7 +145,7 @@ void main() {
         refreshToken: 'refreshToken',
         authToken: 'authToken',
       );
-      
+
       when(databaseFunctions.refreshAccessToken("refreshToken"))
           .thenThrow(Exception('Unrecoverable error'));
 
@@ -155,7 +157,8 @@ void main() {
         expect(e.toString(), contains('Unrecoverable error'));
       }
 
-      expect(exceptionCaught, isTrue, reason: 'Exception should have been caught');
+      expect(exceptionCaught, isTrue,
+          reason: 'Exception should have been caught');
       // Tokens should be cleared
       expect(userConfig.currentUser.refreshToken, isNull);
       expect(userConfig.currentUser.authToken, isNull);
